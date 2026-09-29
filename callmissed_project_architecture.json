@@ -1,0 +1,245 @@
+{
+  "project": {
+    "name": "CallMissed Voice Agent Platform",
+    "goal": "Build and deploy a web application where users can chat, generate images, and interact with a voice agent using the CallMissed API.",
+    "reference": "https://docs.callmissed.com/"
+  },
+  "architecture": {
+    "overview": "React frontend hosted on Firebase communicates with a FastAPI backend. FastAPI securely communicates with CallMissed using the provided API key.",
+    "flow": [
+      "User opens the web application",
+      "React frontend handles Chat, Image Generation, and Voice Agent UI",
+      "Frontend sends requests to FastAPI backend",
+      "FastAPI keeps the CallMissed API key private",
+      "FastAPI calls the appropriate CallMissed API",
+      "CallMissed returns the AI/voice result",
+      "FastAPI returns the result to the frontend",
+      "Frontend displays the result to the user"
+    ],
+    "components": [
+      {
+        "name": "Frontend",
+        "technology": "React + Vite",
+        "hosting": "Firebase Hosting",
+        "responsibilities": [
+          "Chat interface",
+          "Image generation interface",
+          "Voice agent interface",
+          "Loading and error states",
+          "Display API results"
+        ]
+      },
+      {
+        "name": "Backend",
+        "technology": "FastAPI",
+        "hosting": "AWS Free Tier or equivalent",
+        "responsibilities": [
+          "Expose application endpoints",
+          "Validate incoming requests",
+          "Keep CallMissed API key private",
+          "Call CallMissed APIs",
+          "Handle errors and timeouts",
+          "Provide clean responses to frontend",
+          "Add tests"
+        ]
+      },
+      {
+        "name": "AI Platform",
+        "provider": "CallMissed",
+        "authentication": "Single API key supplied by the company",
+        "capabilities": [
+          "Chat",
+          "Image generation",
+          "Voice agent",
+          "Speech-related functionality where supported by the API"
+        ]
+      },
+      {
+        "name": "Database",
+        "technology": "Optional - Firestore or PostgreSQL",
+        "responsibilities": [
+          "Store users if authentication is implemented",
+          "Store conversation history if required",
+          "Store application metadata"
+        ]
+      }
+    ]
+  },
+  "implementation_plan": [
+    {
+      "step": 1,
+      "title": "Study CallMissed Documentation",
+      "tasks": [
+        "Read authentication requirements",
+        "Identify chat endpoint and request format",
+        "Identify image generation endpoint and request format",
+        "Understand voice agent/session flow",
+        "Check required headers, models, limits, and response formats"
+      ],
+      "deliverable": "API integration notes"
+    },
+    {
+      "step": 2,
+      "title": "Design the Application",
+      "tasks": [
+        "Create a simple dashboard layout",
+        "Create Chat section",
+        "Create Image Generation section",
+        "Create Voice Agent section",
+        "Define frontend-to-backend request flow",
+        "Define error and loading states"
+      ],
+      "deliverable": "UI and architecture design"
+    },
+    {
+      "step": 3,
+      "title": "Create FastAPI Backend",
+      "tasks": [
+        "Initialize FastAPI project",
+        "Create environment configuration",
+        "Store CALLMISSED_API_KEY in environment variables",
+        "Create API client/service layer",
+        "Add request and response schemas with Pydantic"
+      ],
+      "deliverable": "Running FastAPI backend"
+    },
+    {
+      "step": 4,
+      "title": "Implement Chat",
+      "tasks": [
+        "Create POST /api/chat endpoint",
+        "Validate user message",
+        "Forward request to CallMissed chat API",
+        "Handle API errors",
+        "Return assistant response to frontend"
+      ],
+      "deliverable": "Working chat feature"
+    },
+    {
+      "step": 5,
+      "title": "Implement Image Generation",
+      "tasks": [
+        "Create POST /api/images/generate endpoint",
+        "Accept image prompt and supported options",
+        "Call CallMissed image generation API",
+        "Handle generation failures",
+        "Return generated image information to frontend"
+      ],
+      "deliverable": "Working image generation feature"
+    },
+    {
+      "step": 6,
+      "title": "Implement Voice Agent",
+      "tasks": [
+        "Understand the CallMissed voice session/WebRTC flow",
+        "Create a backend endpoint for creating a voice session",
+        "Keep the main API key server-side",
+        "Return only the client-safe session information to the browser",
+        "Connect the frontend to the voice session",
+        "Add start, stop, microphone state, and error handling"
+      ],
+      "deliverable": "Working browser voice-agent interaction"
+    },
+    {
+      "step": 7,
+      "title": "Build React Frontend",
+      "tasks": [
+        "Create responsive layout",
+        "Build chat UI",
+        "Build image generation UI",
+        "Build voice agent UI",
+        "Connect frontend to FastAPI",
+        "Add loading indicators",
+        "Add error messages",
+        "Add empty states"
+      ],
+      "deliverable": "Complete web application"
+    },
+    {
+      "step": 8,
+      "title": "Testing",
+      "tasks": [
+        "Unit test backend request validation",
+        "Test CallMissed service error handling",
+        "Test chat endpoint",
+        "Test image endpoint",
+        "Test voice session endpoint",
+        "Test frontend API integration",
+        "Verify API key is never exposed to frontend"
+      ],
+      "deliverable": "Tested application"
+    },
+    {
+      "step": 9,
+      "title": "Deployment",
+      "tasks": [
+        "Deploy FastAPI backend to AWS Free Tier or equivalent",
+        "Configure production environment variables",
+        "Configure CORS for the Firebase frontend domain",
+        "Build React production bundle",
+        "Deploy frontend to Firebase Hosting",
+        "Verify HTTPS communication between frontend and backend"
+      ],
+      "deliverable": "Public hosted application"
+    },
+    {
+      "step": 10,
+      "title": "GitHub and Submission",
+      "tasks": [
+        "Clean project structure",
+        "Add README with architecture diagram",
+        "Document local setup",
+        "Document environment variables without exposing secrets",
+        "Document API endpoints",
+        "Document deployment",
+        "Add screenshots/demo information",
+        "Push source code to GitHub",
+        "Send hosted application URL and GitHub repository URL to the requested contact"
+      ],
+      "deliverable": "Submission-ready repository and deployed application"
+    }
+  ],
+  "suggested_project_structure": {
+    "root": [
+      "frontend/",
+      "backend/",
+      "README.md",
+      ".gitignore"
+    ],
+    "frontend": [
+      "src/components/Chat/",
+      "src/components/ImageGenerator/",
+      "src/components/VoiceAgent/",
+      "src/services/api.js",
+      "src/App.jsx"
+    ],
+    "backend": [
+      "app/main.py",
+      "app/api/routes/chat.py",
+      "app/api/routes/images.py",
+      "app/api/routes/voice.py",
+      "app/services/callmissed.py",
+      "app/schemas/",
+      "app/config.py",
+      "tests/"
+    ]
+  },
+  "security_requirements": [
+    "Never put the CallMissed API key in React source code",
+    "Never commit .env files containing secrets",
+    "Use environment variables on the backend",
+    "Configure CORS to allow only the deployed frontend origin where practical",
+    "Validate user input on the backend",
+    "Do not log API keys or sensitive tokens"
+  ],
+  "definition_of_done": [
+    "User can send a chat message and receive an AI response",
+    "User can submit an image prompt and receive the generated image/result",
+    "User can start and interact with the voice agent from the browser",
+    "Frontend is publicly accessible over HTTPS",
+    "Backend is publicly accessible over HTTPS",
+    "CallMissed API key remains private",
+    "Core backend endpoints have tests",
+    "GitHub repository contains setup and architecture documentation"
+  ]
+}

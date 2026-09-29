@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - CALLMISSED_API_KEY=${CALLMISSED_API_KEY}
+      - CALLMISSED_BASE_URL=https://api.callmissed.com
+      - ENVIRONMENT=production
+      - ALLOWED_ORIGINS=*
+      - CALLMISSED_MOCK_MODE=false
+    restart: unless-stopped
