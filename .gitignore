@@ -1,5 +1,20 @@
-# Python
+# ==============================================================================
+# Environment variables and secrets (CRITICAL: NEVER commit or push secrets)
+# ==============================================================================
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+**/*.env
+!*.env.example
+!**/.env.example
+
+# ==============================================================================
+# Python & Virtual Environments
+# ==============================================================================
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 *.so
@@ -7,6 +22,9 @@ __pycache__/
 env/
 venv/
 .venv/
+**/env/
+**/venv/
+**/.venv/
 build/
 develop-eggs/
 dist/
@@ -23,32 +41,40 @@ wheels/
 .installed.cfg
 *.egg
 .pytest_cache/
+**/.pytest_cache/
 .coverage
 htmlcov/
 
-# Node / Frontend
+# ==============================================================================
+# Node, Frontend & Build Artifacts
+# ==============================================================================
 node_modules/
-frontend/dist/
-frontend/.vite/
+**/node_modules/
+dist/
+**/dist/
+.vite/
+**/.vite/
 .eslintcache
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment and Secrets
-.env
-.env.local
-.env.*.local
-*.env
-!*.env.example
-
-# IDE
+# ==============================================================================
+# IDEs and Editors
+# ==============================================================================
 .idea/
 .vscode/
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# OS
+# ==============================================================================
+# Operating System Files
+# ==============================================================================
 .DS_Store
 Thumbs.db
