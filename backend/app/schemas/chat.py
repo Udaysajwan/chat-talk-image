@@ -4,7 +4,8 @@ from pydantic import BaseModel, Field
 
 class ChatMessage(BaseModel):
     role: Literal["system", "user", "assistant"] = Field(..., description="Role of the message sender")
-    content: str = Field(..., min_length=1, description="Text content of the message")
+    content: str = Field(default="", description="Text content of the message")
+    reasoning_content: Optional[str] = Field(default=None, description="Reasoning content if provided by model")
 
 
 class ChatRequest(BaseModel):

@@ -28,6 +28,18 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
             )
 
         assistant_msg = choices[0].get("message", {})
+        raw_content = assistant_msg.get("content")
+        reasoning = assistant_msg.get("reasoning_content") or assistant_msg.get("thought")
+
+        # If content is None or empty string, fallback to reasoning content or friendly placeholder
+        final_content = ""
+        if raw_content and str(raw_content).strip():
+            final_content = str(raw_content).strip()
+        elif reasoning and str(reasoning).strip():
+            final_content = str(reasoning).strip()
+        else:
+            final_content = "I have processed your request."
+
         usage_data = result.get("usage", {})
 
         return ChatResponse(
@@ -35,7 +47,8 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
             model=result.get("model", request.model),
             message=ChatMessage(
                 role=assistant_msg.get("role", "assistant"),
-                content=assistant_msg.get("content", "")
+                content=final_content,
+                reasoning_content=str(reasoning) if reasoning else None,
             ),
             usage=ChatUsage(
                 prompt_tokens=usage_data.get("prompt_tokens", 0),
