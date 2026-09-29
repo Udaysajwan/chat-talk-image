@@ -46,8 +46,8 @@ export default function App() {
             <div className="flex items-center gap-2.5">
               <Info className="w-5 h-5 text-amber-600 shrink-0" />
               <span>
-                <strong>Local Development Mode:</strong> Backend is running in CallMissed Mock Mode.
-                To switch to live API calls, set your <code className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-900 font-mono">CALLMISSED_API_KEY=cm_...</code> in <code className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-900 font-mono">backend/.env</code>.
+                <strong>Mock Mode Active:</strong> The backend is currently running without an active CallMissed API key.
+                To enable live AI models and WebRTC voice calls, add <code className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-900 font-mono">CALLMISSED_API_KEY</code> in your Render <strong>Environment</strong> settings (or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-900 font-mono">backend/.env</code> for local development).
               </span>
             </div>
           </div>
