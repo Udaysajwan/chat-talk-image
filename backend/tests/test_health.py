@@ -8,6 +8,13 @@ async def test_root_endpoint():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.get("/")
     assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_api_root_endpoint():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        response = await ac.get("/api")
+    assert response.status_code == 200
     data = response.json()
     assert "message" in data
     assert data["docs"] == "/docs"
