@@ -1,4 +1,4 @@
-const DEFAULT_CLOUD_TUNNEL = 'https://calm-coats-attend.loca.lt';
+const DEFAULT_CLOUD_TUNNEL = 'https://helpless-bear-85.loca.lt';
 
 export function getApiBaseUrl() {
   if (typeof window !== 'undefined') {
