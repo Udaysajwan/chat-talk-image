@@ -2,26 +2,47 @@ const DEFAULT_CLOUD_TUNNEL = 'https://helpless-bear-85.loca.lt';
 
 export function getApiBaseUrl() {
   if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    const port = window.location.port;
+
+    // Check user override in localStorage
     const saved = localStorage.getItem('callmissed_api_base_url');
     if (saved && saved.trim()) {
-      return saved.trim().replace(/\/+$/, '');
+      const clean = saved.trim().replace(/\/+$/, '');
+      // If deployed on Render or direct server mount, ignore stale tunnel or localhost overrides
+      if (host.includes('onrender.com') && (clean.includes('loca.lt') || clean.includes('localhost'))) {
+        localStorage.removeItem('callmissed_api_base_url');
+      } else {
+        return clean;
+      }
+    }
+
+    // When deployed on Render (*.onrender.com), Docker, or served directly from FastAPI:
+    // The backend is on the SAME ORIGIN, so use relative path ""
+    const isStaticHost = host.endsWith('web.app') || 
+                         host.endsWith('firebaseapp.com') || 
+                         host.endsWith('vercel.app') || 
+                         host.endsWith('netlify.app');
+
+    const isViteDev = port === '5173' || port === '3000';
+
+    if (host.includes('onrender.com') || port === '8000' || (!isStaticHost && !isViteDev)) {
+      return '';
+    }
+
+    // If hosted on a static platform like Firebase over HTTPS
+    if (window.location.protocol === 'https:') {
+      const envUrl = import.meta.env.VITE_API_BASE_URL;
+      if (envUrl && envUrl.trim() && !envUrl.includes('localhost:8000')) {
+        return envUrl.trim().replace(/\/+$/, '');
+      }
+      return DEFAULT_CLOUD_TUNNEL;
     }
   }
 
   const envUrl = import.meta.env.VITE_API_BASE_URL;
-  if (envUrl && envUrl.trim()) {
+  if (envUrl && envUrl.trim() && !envUrl.includes('localhost:8000')) {
     return envUrl.trim().replace(/\/+$/, '');
-  }
-
-  if (typeof window !== 'undefined') {
-    // If served directly from FastAPI static mount on port 8000
-    if (window.location.port === '8000') {
-      return '';
-    }
-    // If hosted on HTTPS (e.g. Firebase Hosting at https://callmissed-3c653.web.app)
-    if (window.location.protocol === 'https:') {
-      return DEFAULT_CLOUD_TUNNEL;
-    }
   }
 
   return 'http://localhost:8000';
