@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import VoiceAgentContainer from './components/VoiceAgent/VoiceAgentContainer';
 import ChatContainer from './components/Chat/ChatContainer';
@@ -10,21 +10,23 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('voice');
   const [backendStatus, setBackendStatus] = useState(null);
 
-  useEffect(() => {
-    const verifyBackend = async () => {
-      try {
-        const health = await checkHealth();
-        setBackendStatus(health);
-      } catch (err) {
-        console.warn('Backend currently unreachable:', err);
-        setBackendStatus({ status: 'unreachable', mock_mode: false });
-      }
-    };
-
-    verifyBackend();
-    const interval = setInterval(verifyBackend, 15000);
-    return () => clearInterval(interval);
+  const verifyBackend = useCallback(async (customUrl) => {
+    try {
+      const health = await checkHealth(customUrl);
+      setBackendStatus(health);
+      return health;
+    } catch (err) {
+      console.warn('Backend currently unreachable:', err);
+      setBackendStatus({ status: 'unreachable', mock_mode: false, error: err.message });
+      return { status: 'unreachable', error: err.message };
+    }
   }, []);
+
+  useEffect(() => {
+    verifyBackend();
+    const interval = setInterval(() => verifyBackend(), 15000);
+    return () => clearInterval(interval);
+  }, [verifyBackend]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-800 font-sans">
@@ -33,6 +35,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         backendStatus={backendStatus}
+        onRefreshBackend={verifyBackend}
       />
 
       {/* Main Content Area */}
